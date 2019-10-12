@@ -1,6 +1,17 @@
+import functools
+
+
+@functools.total_ordering
 class Version:
     def __init__(self, version):
-        pass
+        self.version = version
+
+    def __eq__(self, other):
+        return self.version == other
+
+    def __lt__(self, other):
+        return self.version < other
+
 
 def main():
     to_test = [
