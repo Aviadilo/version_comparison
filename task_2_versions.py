@@ -23,7 +23,7 @@ class Version:
 
 
 def make_value(raw_str):
-    splited = re.split('\.|-', raw_str)
+    splited = raw_str.replace('-', '.').split('.')
     splited = make_int(splited)
     return splited
 
