@@ -5,13 +5,10 @@ import re
 @functools.total_ordering
 class Version:
     def __init__(self, version):
-        version = make_value(version)
+        version, digits, rest = make_values(version)
         self.version = version
-        self.digits = version[:3]
-        if version[3:]:
-            self.rest = version[3:]
-        else:
-            self.rest = 0
+        self.digits = digits
+        self.rest = rest
 
     def __eq__(self, other):
         return self.version == other
@@ -22,17 +19,24 @@ class Version:
         return self.version < other
 
 
-def make_value(raw_str):
+def make_values(raw_str):
     splited = raw_str.replace('-', '.').split('.')
-    splited = make_int(splited)
-    return splited
+    converted_version = convert_str_digits_to_int(splited)
+    digits, rest = divide_into_two_values(converted_version)
+    return converted_version, digits, rest
 
 
-def make_int(our_list):
+def convert_str_digits_to_int(our_list):
     for i in range(len(our_list)):
         if our_list[i].isdigit():
             our_list[i] = int(our_list[i])
     return our_list
+
+
+def divide_into_two_values(full_version):
+    digits = full_version[:3]
+    rest = full_version[3:] if full_version[3:] else 0
+    return digits, rest
 
 
 def main():
@@ -51,6 +55,7 @@ def main():
         assert Version(version_1) < Version(version_2), 'le failed'
         assert Version(version_2) > Version(version_1), 'ge failed'
         assert Version(version_2) != Version(version_1), 'neq failed'
+        print("Yes!")
 
 
 if __name__ == "__main__":
